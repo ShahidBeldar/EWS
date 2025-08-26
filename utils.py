@@ -1,15 +1,21 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from transformers import pipeline
 import yfinance as yf
+import streamlit as st
+from transformers import pipeline
+
+@st.cache_resource
+def get_sentiment_model():
+    return pipeline("sentiment-analysis")
+
+sentiment_model = get_sentiment_model()
 
 # Load HuggingFace sentiment model once (cached for reuse)
-sentiment_model = pipeline("sentiment-analysis")
-
+ 
+@st.cache_data
 def load_data(path):
     df = pd.read_csv(path)
-    # Handle both "Headline" and "Top1" column names
     if "Top1" in df.columns:
         df.rename(columns={'Top1': 'Headline'}, inplace=True)
     df['Headline'] = df['Headline'].astype(str)
