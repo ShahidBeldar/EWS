@@ -9,8 +9,8 @@ from transformers import pipeline
 def get_sentiment_model():
     return pipeline(
         "sentiment-analysis",
-        model="huawei-noah/TinyBERT_General_6L_768D",
-        tokenizer="huawei-noah/TinyBERT_General_6L_768D"
+        model="huawei-noah/TinyBERT_General_4L_312D",
+        tokenizer="huawei-noah/TinyBERT_General_4L_312D"
     )
 
 sentiment_model = get_sentiment_model()
