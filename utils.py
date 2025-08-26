@@ -7,7 +7,7 @@ from transformers import pipeline
 
 @st.cache_resource
 def get_sentiment_model():
-    return pipeline("sentiment-analysis")
+    return pipeline("sentiment-analysis", model="prajjwal1/bert-tiny")
 
 sentiment_model = get_sentiment_model()
 
