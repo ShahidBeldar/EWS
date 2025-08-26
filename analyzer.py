@@ -1,8 +1,6 @@
 from transformers import pipeline
-from utils import load_data, compute_similarity, compute_sentiment
+from utils import load_data, compute_similarity, compute_sentiment, sentiment_model
 
-# Load HuggingFace sentiment model (DistilBERT fine-tuned on sentiment)
-sentiment_model = pipeline("sentiment-analysis")
 
 def analyze_headline(headline):
     # Run sentiment analysis
