@@ -11,11 +11,9 @@ from transformers import pipeline
 @st.cache_resource
 def get_sentiment_model():
     return pipeline(
-        "sentiment-analysis",
-        model="yiyanghkust/finbert-tone",
-        tokenizer="yiyanghkust/finbert-tone"
+        "sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english",
+        tokenizer="distilbert-base-uncased"
     )
-
 sentiment_model = get_sentiment_model()
 
 
