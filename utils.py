@@ -21,19 +21,14 @@ def compute_sentiment(df):
     Apply transformer sentiment analysis to the dataset headlines.
     Adds 'sentiment' column with polarity score.
     """
-    sentiments = []
-    for text in df['Headline']:
-        try:
-            result = sentiment_model(text)[0]
-            if result['label'] == "POSITIVE":
-                score = result['score']
-            else:
-                score = -result['score']
-            sentiments.append(score)
-        except Exception:
-            sentiments.append(0.0)  # fallback if error
-    df['sentiment'] = sentiments
+    try:
+        results = sentiment_model(df['Headline'].tolist(), batch_size=32, truncation=True)
+        sentiments = [(r['score'] if r['label'] == "POSITIVE" else -r['score']) for r in results]
+        df['sentiment'] = sentiments
+    except Exception:
+        df['sentiment'] = 0.0
     return df
+    
 
 def compute_similarity(df, fake_headline):
     headlines = df['Headline'].tolist()
