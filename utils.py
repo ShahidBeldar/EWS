@@ -5,15 +5,20 @@ import yfinance as yf
 import streamlit as st
 from transformers import pipeline
 
+import streamlit as st
+from transformers import pipeline
+
 @st.cache_resource
 def get_sentiment_model():
     return pipeline(
         "sentiment-analysis",
-        model="huawei-noah/TinyBERT_General_4L_312D",
-        tokenizer="huawei-noah/TinyBERT_General_4L_312D"
+        model="yiyanghkust/finbert-tone",
+        tokenizer="yiyanghkust/finbert-tone"
     )
 
 sentiment_model = get_sentiment_model()
+
+
 # Load HuggingFace sentiment model once (cached for reuse)
  
 @st.cache_data
