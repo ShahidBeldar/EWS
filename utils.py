@@ -11,8 +11,9 @@ from transformers import pipeline
 @st.cache_resource
 def get_sentiment_model():
     return pipeline(
-        "sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english",
-        tokenizer="distilbert-base-uncased"
+        "sentiment-analysis",
+        model="huawei-noah/TinyBERT_General_4L_312D",
+        tokenizer="huawei-noah/TinyBERT_General_4L_312D"
     )
 sentiment_model = get_sentiment_model()
 
@@ -23,24 +24,20 @@ sentiment_model = get_sentiment_model()
 def load_data(path):
     df = pd.read_csv(path)
     if "Top1" in df.columns:
-        df.rename(columns={'Top1': 'Headline'}, inplace=True)
+        df.rename(columns={'headline': 'Headline'}, inplace=True)
     df['Headline'] = df['Headline'].astype(str)
     df.dropna(subset=['Headline'], inplace=True)
     return df
 
 def compute_sentiment(df):
-    """
-    Apply transformer sentiment analysis to the dataset headlines.
-    Adds 'sentiment' column with polarity score.
-    """
     try:
-        results = sentiment_model(df['Headline'].tolist(), batch_size=32, truncation=True)
-        sentiments = [(r['score'] if r['label'] == "POSITIVE" else -r['score']) for r in results]
+        results = sentiment_model(df['Headline'].tolist(), batch_size=32, truncation=True, max_length=128)
+        # Adjust for TinyBERT's output (may vary based on fine-tuning labels)
+        sentiments = [(r['score'] if r['label'] == 'LABEL_1' else -r['score'] if r['label'] == 'LABEL_0' else 0.0) for r in results]
         df['sentiment'] = sentiments
     except Exception:
         df['sentiment'] = 0.0
     return df
-    
 
 def compute_similarity(df, fake_headline):
     headlines = df['Headline'].tolist()
